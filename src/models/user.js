@@ -22,11 +22,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     unique: true,
     trim: true,
-    lowercase: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please enter a valid email address"
-    ]
+    lowercase: true
   },
 
   password: {
@@ -45,6 +41,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["male", "female", "other"],
     required: [true, "Gender is required"]
+  },
+  photoUrl : {
+    type : String,
+    default:"https://www.pngitem.com/pimgs/m/661-6619328_default-avatar-png-blank-person-transparent-png.png"
   },
   skills:[String]
 });

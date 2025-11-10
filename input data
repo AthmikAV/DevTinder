@@ -1,0 +1,20 @@
+[{
+    "firstName": "Priya",
+    "lastName": "Verma",
+    "email": "priya@gmail.com",
+    "password": "Priya@123",
+    "age": 25,
+    "gender": "female",
+    "photoUrl": "https://randomuser.me/api/portraits/women/4.jpg",
+    "skills": ["UI/UX Design", "Figma", "Photoshop"]
+  },
+    {
+    "firstName": "Neha",
+    "lastName": "Sharma",
+    "email": "neha@gmail.com",
+    "password": "Neha@123", 
+    "age": 24,
+    "gender": "female",
+    "photoUrl": "https://randomuser.me/api/portraits/women/2.jpg",
+    "skills": ["Python", "Django", "Machine Learning"]
+  }]
