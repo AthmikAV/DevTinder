@@ -17,4 +17,5 @@
     "gender": "female",
     "photoUrl": "https://randomuser.me/api/portraits/women/2.jpg",
     "skills": ["Python", "Django", "Machine Learning"]
+  },{
   }]

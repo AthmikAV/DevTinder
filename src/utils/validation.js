@@ -1,7 +1,7 @@
 const validator = require("validator");
 
 const Validation = (req) =>{
-    const {firstName, lastName,email,password} = req.body;
+    const {email,password} = req.body;
     if(!validator.isEmail(email)){
         throw new Error ("Email is not Valid");
     }
@@ -11,4 +11,14 @@ const Validation = (req) =>{
 };
 
 
-module.exports = Validation;
+
+const patchDataValidation = (req) =>{
+    const data = req.body;
+    const allowedFeilds = ["firstName","lastName", "age", "gender","photoUrl",  "skills"]
+    const validEditableData = Object.keys(data).every((key)=>allowedFeilds.includes(key));
+    return validEditableData;
+};
+
+
+
+module.exports = {Validation,patchDataValidation};
