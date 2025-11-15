@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 
 authRouter.post('/signup',async (req,res)=>{
-    const {firstName,lastName,email,password,age,gender,photoUrl,skills} = req.body;
+    const {firstName,lastName,email,password,age,gender,photoUrl,skills,about} = req.body;
     const hashedPassword = await bcrypt.hash(password,10);
     const user = new User({
         firstName,
@@ -17,7 +17,7 @@ authRouter.post('/signup',async (req,res)=>{
         age,
         gender,
         photoUrl,
-        skills
+        skills,about
     });
     try{
         Validation(req);
@@ -33,6 +33,7 @@ authRouter.post('/signup',async (req,res)=>{
 });
 
 
+
 authRouter.post("/login", async (req,res)=>{
     const {email,password} = req.body;
     try{
@@ -40,12 +41,14 @@ authRouter.post("/login", async (req,res)=>{
             throw new Error ("Email is not Valid");
         }
 
-        const user =await User.findOne({email:email});
+        const user =await User.findOne({email:email})
         if (!user){
             throw new Error ("Invalid Credential");
         }
 
-        const isPasswordValid = user.validatePassword(password);
+        const isPasswordValid = await user.validatePassword(password);
+        
+        user.password = null;
         if (!isPasswordValid){
             throw new Error("Invalid Credential");
         }
@@ -54,7 +57,8 @@ authRouter.post("/login", async (req,res)=>{
         res.cookie("token",token);
         res.status(200).json({
             success:true,
-            message:"Logged Succesfully"
+            message: "Logged Succesfully",
+            data: user
         })
     
     }

@@ -48,7 +48,11 @@ const userSchema = new mongoose.Schema({
     type : String,
     default:"https://www.pngitem.com/pimgs/m/661-6619328_default-avatar-png-blank-person-transparent-png.png"
   },
-  skills:[String]
+  skills: [String],
+  about: {
+    type: String,
+    default:"This is default string"
+  }
 });
 
 userSchema.methods.getJWT = async function(){
