@@ -18,4 +18,12 @@
     "photoUrl": "https://randomuser.me/api/portraits/women/2.jpg",
     "skills": ["Python", "Django", "Machine Learning"]
   },{
-  }]
+  "firstName": "Athmik",
+  "lastName": "AV",
+  "email": "athmik@gmail.com",
+  "password": "Athmik@124",
+  "age": 28,
+  "gender": "male",
+  "photoUrl": "https://randomuser.me/api/portraits/men/12.jpg",
+  "skills": ["Node.js", "Express", "MySQL"]
+}]

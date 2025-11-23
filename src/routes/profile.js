@@ -11,11 +11,11 @@ const bcrypt = require('bcrypt');
 profileRouter.get('/profile/view',userAuth, async (req,res)=>{
     try{
         const user = await User.findById(req.user._id);
-        res.send(user);
+        res.status(200).send(user)
     }catch(err){
-        res.status(500).json({
+        res.status(401).json({
             success:false,
-            message:"ERROR : " + err.message
+            message: "ERROR : " + err.message,
         })
     }});
 
@@ -29,9 +29,7 @@ profileRouter.patch('/profile/edit',userAuth,async (req,res)=>{
         }
         Object.keys(editableData).forEach((item)=>user[item] = editableData[item])
         await user.save()
-        res.status(200).json({
-            message: "Edited succesfully"
-        })
+        res.status(200).send(user)
     }catch(err){
         res.status(500).json({
             message:"ERROR: " + err
