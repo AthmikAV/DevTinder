@@ -13,7 +13,7 @@ userRouter.get('/user/request/received',userAuth,async (req,res) =>{
             toUserId:loggedInUser._id
         }).populate("fromUserId",['firstName','lastName','age','gender','photoUrl']);
 
-        res.status(200).json({message :"Data is fetched",
+        res.status(200).json({message :"Recived Request",
             data :(receivedData)});
 
     }
@@ -37,16 +37,16 @@ userRouter.get('/user/request/connections',userAuth, async(req,res)=>{
 
 
         const data = connectionsData.map((item) => {
-  if (item.fromUserId._id.toString() === loggedInUser._id.toString()) {
-    return item.toUserId;
-  } else {
-    return item.fromUserId; 
-  }
+        if (item.fromUserId._id.toString() === loggedInUser._id.toString()) {
+            return item.toUserId;
+        } else {
+        return item.fromUserId; 
+        }
 });
 
         res.status(200).json({
             message : "connections requests",
-            data : data
+            data 
         })
     }
     catch(err){

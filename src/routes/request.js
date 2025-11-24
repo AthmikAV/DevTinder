@@ -63,7 +63,7 @@ requestRouter.post("/request/:status/:userId",userAuth,async(req,res)=>{
 });
 
 
-requestRouter.post("/request/review/:status/requestId",userAuth,async(req,res)=>{
+requestRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=>{
     try{
         const allowedStatus = ['accept','reject'];
         const {status,requestId} = req.params;
@@ -74,7 +74,7 @@ requestRouter.post("/request/review/:status/requestId",userAuth,async(req,res)=>
             })
         }
 
-        const verifyConnection =await ConnectionRequest.find({
+        const verifyConnection =await ConnectionRequest.findOne({
             _id : requestId,
             status : 'interest',
             toUserId:logedInUser
