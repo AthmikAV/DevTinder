@@ -56,38 +56,45 @@ userRouter.get('/user/request/connections',userAuth, async(req,res)=>{
     }
 });
 
-userRouter.get('/user/feed',userAuth, async (req,res)=>{
-    try{
-        const page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 10;
+userRouter.get('/user/feed', userAuth, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+    limit = limit > 50 ? 50 : limit;
+    const skip = (page - 1) * limit;
 
-        limit = limit > 50 ? 50 : limit;
-        const skip = (page - 1) * limit;
-        const loggedInUser = req.user;
-        const connectionData =await  ConnectionRequest.find({
-            $or : [{fromUserId:loggedInUser._id},{toUserId:loggedInUser}]
-        }).select('fromUserId toUserId');
+    const loggedInUser = req.user;
 
-        const hideDataForFeed = new Set();
-        connectionData.forEach(element => {
-            hideDataForFeed.add(element.fromUserId.toString());
-            hideDataForFeed.add(element.toUserId.toString());
-        });
+    // Get all connection requests involving logged in user
+    const connectionData = await ConnectionRequest.find({
+      $or: [
+        { fromUserId: loggedInUser._id },
+        { toUserId: loggedInUser._id }
+      ]
+    }).select('fromUserId toUserId');
 
-        const feedData =await User.find({
-            $and : [{_id :{$ne : loggedInUser._id} }, {_id : {$nin : Array.from(connectionData)}}]
-        }).skip(skip).limit(limit);
+    // Build a set of user IDs to exclude from feed
+    const hideDataForFeed = new Set();
+    connectionData.forEach(el => {
+      hideDataForFeed.add(el.fromUserId.toString());
+      hideDataForFeed.add(el.toUserId.toString());
+    });
 
-        res.status(200).json({
-            message: "Feed data fetched successfully",
-            data:feedData
-        })
-    }
-    catch(err){
-        res.status(404).json({
-            message : "ERROR: " + err
-        })
-    }
-})
+    // Exclude logged-in user and all users already connected / interacted
+    const feedData = await User.find({
+      _id: { $nin: Array.from(hideDataForFeed), $ne: loggedInUser._id }
+    })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      message: "Feed data fetched successfully",
+      data: feedData
+    });
+  } catch (err) {
+    res.status(500).json({ message: "ERROR: " + err.message });
+  }
+});
+
 
 module.exports = userRouter;
