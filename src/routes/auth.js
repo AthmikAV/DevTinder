@@ -6,30 +6,43 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 
-authRouter.post('/signup',async (req,res)=>{
-    const {firstName,lastName,email,password,age,gender,photoUrl,skills,about} = req.body;
-    const hashedPassword = await bcrypt.hash(password,10);
+authRouter.post('/signup', async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, age, gender, photoUrl, skills, about } = req.body;
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
     const user = new User({
-        firstName,
-        lastName,
-        email,
-        password : hashedPassword,
-        age,
-        gender,
-        photoUrl,
-        skills,about
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      age,
+      gender,
+      photoUrl,
+      skills,
+      about
     });
-    try{
-        Validation(req);
-        await user.save();
-        res.status(200).json({
-            success: true,
-            message:"User is Added Succesfully"
-        })
-    }
-    catch(err){
-        res.status(404).send('Error: ' + err)
-    } 
+
+    Validation(req);
+
+      const savedUser = await user.save();
+      const token = await savedUser.getJWT();
+        res.cookie("token",token);
+    res.status(200).json({
+      success: true,
+      message: "User added successfully",
+      data: savedUser   // 🔥 This is what frontend needs
+    });
+
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: err.message || "Something went wrong"
+    });
+  }
 });
 
 
